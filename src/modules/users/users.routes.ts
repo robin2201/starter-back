@@ -1,7 +1,5 @@
 import { Router } from "express";
-
 import addRoutes from '../../utils/router/router.utils';
-
 import {
     postUsersController,
     postCheckNameOrEmailController,
