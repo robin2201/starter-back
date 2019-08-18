@@ -23,8 +23,8 @@ export async function hashPassword(password: string): Promise<string> {
     const array: ArrayBuffer = new ArrayBuffer(hash.length + salt.length + 8);
     const hashframe: Buffer = Buffer.from(array);
 
-    hashframe.writeUInt32BE(salt.length, 0, true);
-    hashframe.writeUInt32BE(config.iterations, 4, true);
+    hashframe.writeUInt32BE(salt.length, 0);
+    hashframe.writeUInt32BE(config.iterations, 4);
 
     salt.copy(hashframe, 8);
     hash.copy(hashframe, salt.length + 8);

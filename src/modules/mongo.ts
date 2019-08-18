@@ -30,6 +30,7 @@ export async function mongoInit(): Promise<void> {
 
         mongoLogger.info(`Success connection to MongoDB`);
 
+        return;
     } catch (e) {
         mongoLogger.error(`Fail mongodb connection on URI ${mongo.uri}`);
         throw e;

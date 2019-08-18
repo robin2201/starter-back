@@ -10,6 +10,8 @@ require('dotenv').config();
 import { createCustomLogger } from "./modules/logger";
 
 // ROUTES
+import addProductsRoutes from "./modules/products/products.routes";
+import addSessionRoutes from "./modules/session/session.routes";
 
 // INTERFACES
 import { errorsHandlerMiddleware, IMyError, MyError } from "./utils/errors/errors.utils";
@@ -17,7 +19,10 @@ import { Logger } from "winston";
 import { mongoInit } from "./modules/mongo";
 
 const loadAllRoutes = async (app: Express): Promise<void> => {
-    const routers: Router[] = await Promise.all([]);
+    const routers: Router[] = await Promise.all([
+        addSessionRoutes(),
+        addProductsRoutes(),
+    ]);
 
     if (!routers) {
         return;
@@ -32,7 +37,6 @@ const loadAllRoutes = async (app: Express): Promise<void> => {
 
 export default async (): Promise<Express> => {
     const app: Express = express();
-
 
     const logger: Logger = createCustomLogger('app-module');
 
