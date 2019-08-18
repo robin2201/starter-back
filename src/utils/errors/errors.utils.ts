@@ -15,10 +15,11 @@ export class MyError extends Error {
 }
 
 export async function errorsHandlerMiddleware(err: IMyError, req: Request, res: Response, next: NextFunction): Promise<void> {
-    if (err.message === 'invalid_session') res.clearCookie('token');
+    if (err.message === 'invalid_session') {
+        res.clearCookie('token');
+    }
 
     const status: number = err.status || 500;
 
-    console.log(err);
     res.status(status).send(err.message);
 }

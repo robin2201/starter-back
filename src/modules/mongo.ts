@@ -7,24 +7,31 @@ let client: MongoClient;
 
 const mongoLogger: Logger = createCustomLogger('app-mongo');
 
-const mongo =  {
-        url: process.env.DB_HOST,
+interface mongoConnection {
+    uri: string;
+    dbName: string;
+}
+
+const mongo: mongoConnection =  {
+        uri: process.env.MONGO_CLUSTER_URI,
         dbName: process.env.DB_NAME
 };
 
 // TODO replace with mongodb path in .env
-const uri = process.env.MONGO_CLUSTER_URI;
 
 export async function mongoInit(): Promise<void> {
-    mongoLogger.info(`Start connection to MongoDB URI ${mongo.url}`);
+    mongoLogger.info(`Start connection to MongoDB: ${mongo.dbName}`);
 
     try {
-        client = await MongoClient.connect(uri, { useNewUrlParser: true });
+        client = await MongoClient.connect(mongo.uri, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
 
         mongoLogger.info(`Success connection to MongoDB`);
 
     } catch (e) {
-        mongoLogger.error(`Fail mongodb connection on URI ${mongo.url}`);
+        mongoLogger.error(`Fail mongodb connection on URI ${mongo.uri}`);
         throw e;
     }
 

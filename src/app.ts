@@ -10,26 +10,18 @@ require('dotenv').config();
 import { createCustomLogger } from "./modules/logger";
 
 // ROUTES
-import addSessionRoutes from "./modules/session/session.routes";
-import addUsersRoutes from "./modules/users/users.routes";
-import addAccountsRoutes from "./modules/accounts/accounts.routes";
-import addMediasRoutes from "./modules/medias/medias.routes";
 
 // INTERFACES
 import { errorsHandlerMiddleware, IMyError, MyError } from "./utils/errors/errors.utils";
 import { Logger } from "winston";
-import {mongoInit} from "./modules/mongo";
-
-export const execStart = process.hrtime();
+import { mongoInit } from "./modules/mongo";
 
 const loadAllRoutes = async (app: Express): Promise<void> => {
+    const routers: Router[] = await Promise.all([]);
 
-    const routers: Router[] = await Promise.all([
-        addSessionRoutes(),
-        addMediasRoutes(),
-        addUsersRoutes(),
-        addAccountsRoutes(),
-    ]);
+    if (!routers) {
+        return;
+    }
 
     for (const r of routers) {
         app.use(r);
@@ -41,7 +33,6 @@ const loadAllRoutes = async (app: Express): Promise<void> => {
 export default async (): Promise<Express> => {
     const app: Express = express();
 
-    app.use(cookieParser());
 
     const logger: Logger = createCustomLogger('app-module');
 
@@ -51,14 +42,14 @@ export default async (): Promise<Express> => {
         const cors = require('cors');
         app.use(cors({ credentials: true }));
     }
+    app.use(cookieParser())
+        .use(helmet())
+        .use(morgan('short'))
+        .use(compression())
+        .use(express.json())
+        .use(express.urlencoded( { extended: true }));
 
-    app.use(helmet());
-    app.use(morgan('short'));
-    app.use(compression());
-    app.use(express.json());
-    app.use(express.urlencoded( { extended: true }));
-
-    app.get('/ping', async (req: Request, res: Response): Promise<Response> => res.send('pong'));
+    app.get('/ping', async (req: Request, res: Response): Promise<Response> => res.status(200).send('pong'));
 
     await mongoInit();
     await loadAllRoutes(app);
