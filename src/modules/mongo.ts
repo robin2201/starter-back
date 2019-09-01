@@ -17,8 +17,6 @@ const mongo: mongoConnection =  {
         dbName: process.env.DB_NAME
 };
 
-// TODO replace with mongodb path in .env
-
 export async function mongoInit(): Promise<void> {
     mongoLogger.info(`Start connection to MongoDB: ${mongo.dbName}`);
 
@@ -35,11 +33,10 @@ export async function mongoInit(): Promise<void> {
         mongoLogger.error(`Fail mongodb connection on URI ${mongo.uri}`);
         throw e;
     }
-
 }
 
-export async function getCollection(name: string): Promise<Collection> {
-    const col: Collection = client.db('back').collection(name);
+export const getCollection = async (name: string): Promise<Collection> => {
+    const col: Collection = client.db(mongo.dbName).collection(name);
 
     if (!col) {
         mongoLogger.error(`Collection ${name} not loaded`);
@@ -47,4 +44,17 @@ export async function getCollection(name: string): Promise<Collection> {
     }
 
     return col;
-}
+};
+
+export const createCollection = async (collectionName: string, schema: any): Promise<any> => {
+    await client.db(mongo.dbName).createCollection(collectionName, schema);
+};
+
+export const checkIfCollectionExist = async (collectionName: string): Promise<boolean> => {
+    return !!(
+        await client
+        .db(mongo.dbName)
+        .listCollections({}, { nameOnly: true })
+        .toArray()
+    ).find(({ name }) => name === collectionName)
+};

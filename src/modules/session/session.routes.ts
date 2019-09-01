@@ -1,9 +1,3 @@
-// CORE
-import { Router } from "express";
-
-// ROUTER
-import addRoutes from "../../utils/router/router.utils";
-
 // INTERFACES
 import { IRoutes } from "../../interfaces/routes.interface";
 
@@ -15,8 +9,7 @@ import {
     postSessionController,
     deleteSessionController,
 } from "./session.controller";
-
-const routes: IRoutes[] = [
+const routes: IRoutes[] =  [
     {
         path: "/session",
         method: "POST",
@@ -36,6 +29,4 @@ const routes: IRoutes[] = [
     }
 ];
 
-export default async (): Promise<Router> => {
-    return addRoutes(routes, 'session');
-}
+export default routes;

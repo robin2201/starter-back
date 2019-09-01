@@ -7,7 +7,8 @@
     "dev": "nodemon --exec ts-node -- src/server.ts",
     "build": "tsc && copyfiles -a package.json './node_modules/**' dist/",
     "start": "node -r dotenv/config dist/",
-    "test": "ava --serial tests/"
+    "test": "ava --serial tests/",
+    "generate": "ts-node ./src/utils/generator/module-generator.ts"
   },
   "author": "Berthier Robin",
   "license": "ISC",
