@@ -1,4 +1,4 @@
-import {writeFilePromise} from "../utils/writeFile.utils";
+import { writeFilePromise } from "../utils/writeFile.utils";
 
 const getValidatorFile = (moduleName: string): Buffer => {
     const moduleNameCapitalize: string = `${moduleName.charAt(0).toUpperCase() + moduleName.slice(1)}`;

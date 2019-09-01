@@ -1,34 +1,11 @@
 import { mkdir } from "fs";
-import { join } from "path";
 import { generateRouteFile } from "./templates/routes.template";
 import { generateControllerFile } from "./templates/controller.template";
 import { generateServiceFile } from "./templates/service.template";
 import { generateQueryFile } from "./templates/query.template";
 import { generateInitFile } from "./templates/init.template";
 import { generateValidatorFile } from "./templates/validator.template";
-
-const getBaseDir = (): string => {
-    let hasSrcDir = false;
-    let baseDir = '/';
-
-    const path: string[] = __dirname
-        .split('/')
-        .map((p: string) => {
-            if (p !== 'src' && !hasSrcDir) {
-                return p;
-            }
-            if (p === 'src') {
-                hasSrcDir = true;
-                return p;
-            }
-        }).filter((p: string) => p);
-
-    for (const p of path) {
-        baseDir = join(baseDir, p);
-    }
-
-    return baseDir;
-};
+import {getBaseDir} from "../directory/get-base-dir";
 
 const createDir = async (dirName: string): Promise<{path: string}> => {
   return new Promise<{path: string}>((resolve, reject) => {

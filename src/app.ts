@@ -6,7 +6,7 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 require('dotenv').config();
 
-import { importModulesRecursively } from "./utils/modules_import/module_import.utils";
+import { importModules } from "./utils/modules_import/module_import.utils";
 
 // TOOLS
 import { createCustomLogger } from "./modules/logger";
@@ -39,7 +39,7 @@ export default async (): Promise<Express> => {
     await mongoInit();
 
 
-    await importModulesRecursively(app);
+    await importModules(app);
 
     app.get('*', notFoundRouteMiddleware);
 
