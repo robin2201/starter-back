@@ -15,19 +15,20 @@ starter node + TS
 ## ROUTER
   All routes are imported automaticaly,
   Your routes need to have this structure:
-    [
-      {
-            path: "/route",
-            method: "POST",
-            session: boolean,
-            validate: schemaValidator,
-            handler: [
-                handlerControllerFucntion,
-                ...
-            ]
-      },
-      ...
-    ]
+   # format:
+     [
+        {
+              path: "/route",
+              method: "POST",
+              session: boolean,
+              validate: schemaValidator,
+              handler: [
+                  handlerControllerFucntion,
+                  ...
+              ]
+        },
+        ...
+      ]
 
 ## generator
   command: npm run generate "moduleName"
