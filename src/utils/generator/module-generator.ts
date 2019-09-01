@@ -41,11 +41,19 @@ const generate = async (moduleName: string): Promise<any> => {
 };
 
 (async () => {
+    const execStart: [number, number] = process.hrtime();
+
     const moduleName: string = process.argv[2];
-    console.log("Start generate module", "\x1b[34m", moduleName, "\x1b[0m");
+    console.log(`Generate module\x1b[34m ${moduleName}\x1b[0m`);
 
     try {
         await generate(moduleName);
+        console.log(
+            "module generated in",
+            "\x1b[34m",
+            `${process.hrtime(execStart)[1] / 1000000} ms`,
+            "\x1b[0m"
+        );
     } catch (e) {
         console.log(e);
         process.exit(e.errno)

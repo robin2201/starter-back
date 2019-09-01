@@ -35,5 +35,5 @@ export const generateRouteFile = async (path: string, moduleName: string): Promi
     const filename: string = `${path}/${moduleName}.routes.ts`;
 
     await writeFilePromise(filename, file);
-    console.log("\x1b[32m", "Success generate file", filename, "\x1b[0m");
+    console.log("\x1b[32m", "File", filename, "\x1b[0m");
 };
