@@ -4,7 +4,10 @@ import morgan from 'morgan';
 import compression from 'compression';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
+const rateLimit = require("express-rate-limit");
+
 require('dotenv').config();
+
 
 import { importModules } from "./utils/modules_import/module_import.utils";
 
@@ -27,12 +30,19 @@ export default async (): Promise<Express> => {
         const cors = require('cors');
         app.use(cors({ credentials: true }));
     }
+
+    const apiLimiter = rateLimit({
+        windowMs: 15 * 60 * 1000, // 15 minutes
+        max: 100
+    });
+
     app.use(cookieParser())
         .use(helmet())
         .use(morgan('short'))
         .use(compression())
         .use(express.json())
-        .use(express.urlencoded( { extended: true }));
+        .use(express.urlencoded( { extended: true }))
+        .use(apiLimiter);
 
     app.get('/ping', async (req: Request, res: Response): Promise<Response> => res.status(200).send('pong'));
 
