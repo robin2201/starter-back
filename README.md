@@ -8,9 +8,13 @@ starter node + TS
     DB_NAME=yourDBName
 
 ## JWT
-  You need to create a directory called .jwt
-  Into this directory create a sub called rsa
-  Into rsa add a key pairs RSA, used to encrypt JWT
+  1 You need to create a directory called .jwt
+  2 Into this directory create a sub called rsa
+  3 Into rsa add a key pairs RSA, used to encrypt JWT
+  ### format
+    - private.pem
+    - public.pem
+ this will be updated in future to use KMS services
 
 # ROUTER
   All routes are imported automaticaly,
