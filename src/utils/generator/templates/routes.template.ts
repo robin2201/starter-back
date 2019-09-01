@@ -30,7 +30,7 @@ export default routes;
 `)
 };
 
-export const generateRouteFile = async (path: string, moduleName: string): Promise<any> => {
+export const generateRouteFile = async (path: string, moduleName: string): Promise<void> => {
     const file: Buffer = getValidatorTemplate(moduleName);
     const filename: string = `${path}/${moduleName}.routes.ts`;
 

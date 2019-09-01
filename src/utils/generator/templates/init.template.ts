@@ -59,7 +59,7 @@ export default async (): Promise<void> => {
 `)
 };
 
-export const generateInitFile = async (path: string, moduleName: string): Promise<any> => {
+export const generateInitFile = async (path: string, moduleName: string): Promise<void> => {
     const file: Buffer = await getQueryTemplate(moduleName);
     const filename: string = `${path}/${moduleName}.init.ts`;
 

@@ -5,7 +5,18 @@ import { generateServiceFile } from "./templates/service.template";
 import { generateQueryFile } from "./templates/query.template";
 import { generateInitFile } from "./templates/init.template";
 import { generateValidatorFile } from "./templates/validator.template";
-import {getBaseDir} from "../directory/get-base-dir";
+import { getBaseDir } from "../directory/get-base-dir";
+
+const getTemplateGenerator = (moduleName: string, path: string): any[] => {
+    return [
+        generateRouteFile(path, moduleName),
+        generateControllerFile(path, moduleName),
+        generateServiceFile(path, moduleName),
+        generateQueryFile(path, moduleName),
+        generateInitFile(path, moduleName),
+        generateValidatorFile(path, moduleName),
+    ]
+};
 
 const createDir = async (dirName: string): Promise<{path: string}> => {
   return new Promise<{path: string}>((resolve, reject) => {
@@ -24,17 +35,9 @@ const createDir = async (dirName: string): Promise<{path: string}> => {
 };
 
 const generate = async (moduleName: string): Promise<any> => {
-    const dir: { path: string } = await createDir(moduleName);
+    const { path } = await createDir(moduleName);
 
-    await Promise.all([
-        generateRouteFile(dir.path, moduleName),
-        generateControllerFile(dir.path, moduleName),
-        generateServiceFile(dir.path, moduleName),
-        generateQueryFile(dir.path, moduleName),
-        generateInitFile(dir.path, moduleName),
-        generateValidatorFile(dir.path, moduleName),
-    ])
-
+    await Promise.all(getTemplateGenerator(moduleName, path))
 };
 
 (async () => {

@@ -1,8 +1,8 @@
-import {writeFilePromise} from "../utils/writeFile.utils";
+import { writeFilePromise } from "../utils/writeFile.utils";
 
 const getControllerTemplate = (moduleName: string): Buffer => {
     const moduleNameCapitalize: string = `${moduleName.charAt(0).toUpperCase() + moduleName.slice(1)}`;
-    const serviceFunctionName: string = `get${moduleNameCapitalize}Service`
+    const serviceFunctionName: string = `get${moduleNameCapitalize}Service`;
 
     return Buffer.from(`
 // CORE
@@ -25,7 +25,7 @@ export const get${moduleNameCapitalize}Controller = async (req: Request, res: Re
 `)
 };
 
-export const generateControllerFile = async (path: string, moduleName: string): Promise<any> => {
+export const generateControllerFile = async (path: string, moduleName: string): Promise<void> => {
     const file: Buffer = await getControllerTemplate(moduleName);
     const filename: string = `${path}/${moduleName}.controller.ts`;
 

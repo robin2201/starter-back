@@ -17,13 +17,18 @@ export const get${moduleNameCapitalize} = async (query: { [key: string]: any }, 
 export const get${moduleNameCapitalize}ById = async (${moduleName}Id: string): Promise<any> => {
     const _id: ObjectId = new ObjectId(${moduleName}Id);
 
-    return get${moduleNameCapitalize}({ _id });
+    return findOne${moduleNameCapitalize}({ _id });
 };
 
+const findOne${moduleNameCapitalize} = async (query: any, projection: any = {}): Promise<any> => {
+    const col = get${moduleNameCapitalize}Collection();
+
+    return col.findOne(query, { projection });
+};
 `)
 };
 
-export const generateQueryFile = async (path: string, moduleName: string): Promise<any> => {
+export const generateQueryFile = async (path: string, moduleName: string): Promise<void> => {
     const file: Buffer = await getQueryTemplate(moduleName);
     const filename: string = `${path}/${moduleName}.query.ts`;
 

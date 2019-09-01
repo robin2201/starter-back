@@ -6,8 +6,15 @@ import { sessionMiddleware } from "../../middlewares/session/session.middleware"
 import { IRoutes } from "../../interfaces/routes.interface";
 import { notStrictEqual } from "assert";
 
-const validateRouteObject = (route: IRoutes, moduleName: string): any => {
-    for (const requiredFied of ["method", "path", "handler", "session"]) {
+const iRoutesRequiredFields: string[] = [
+    "method",
+    "path",
+    "handler",
+    "session",
+];
+
+const validateRouteObject = (route: IRoutes, moduleName: string): void => {
+    for (const requiredFied of iRoutesRequiredFields) {
         for (const expected of ["undefined", ""]) {
             notStrictEqual(
                 // @ts-ignore
@@ -25,6 +32,30 @@ const validateRouteObject = (route: IRoutes, moduleName: string): any => {
     }
 };
 
+const loadRoute = async (route: IRoutes, moduleName: string, router: Router): Promise<void> => {
+    validateRouteObject(route, moduleName);
+
+    const method: string = route.method.toLowerCase();
+    const middlewaresHandlers = [];
+
+    if (route.validate) {
+        middlewaresHandlers.push(
+            checkSchema(route.validate),
+            validateRequest
+        );
+    }
+
+    if (route.session) {
+        middlewaresHandlers.push(sessionMiddleware);
+    }
+
+    // @ts-ignore
+    router[method](route.path, [
+        ...middlewaresHandlers,
+        ...route.handler
+    ]);
+};
+
 export default async (routes: IRoutes[], moduleName: string): Promise<Router> => {
     const loggerRoutes = createCustomLogger(`module-${moduleName}-routes`);
 
@@ -32,23 +63,9 @@ export default async (routes: IRoutes[], moduleName: string): Promise<Router> =>
 
     const router: Router = Router();
 
-    for (const r of routes) {
-
-
-        validateRouteObject(r, moduleName);
-        const method: string = r.method.toLowerCase();
-        const middleWaresHandler = [];
-
-        if (r.validate) {
-            middleWaresHandler.push(checkSchema(r.validate));
-            middleWaresHandler.push(validateRequest)
-        }
-
-        if (r.session) middleWaresHandler.push(sessionMiddleware);
-
-        // @ts-ignore
-        router[method](r.path, [ ...middleWaresHandler, ...r.handler ]);
-    }
+    await Promise.all(
+        routes.map(async route => loadRoute(route, moduleName, router))
+    );
 
     return router;
 }

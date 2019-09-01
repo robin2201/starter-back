@@ -23,7 +23,7 @@ export const ${serviceFunctionName} = async (query: { [key: string]: any }): Pro
 `)
 };
 
-export const generateServiceFile = async (path: string, moduleName: string): Promise<any> => {
+export const generateServiceFile = async (path: string, moduleName: string): Promise<void> => {
     const file: Buffer = await getServiceTemplate(moduleName);
     const filename: string = `${path}/${moduleName}.service.ts`;
 
