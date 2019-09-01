@@ -31,9 +31,7 @@ export async function hashPassword(password: string): Promise<string> {
 
     return hashframe.toString(config.encoding);
 }
-
 export async function verifyPassword(password: string, hashframe: string): Promise<boolean> {
-
     const frame: Buffer = Buffer.from(hashframe, config.encoding);
     const saltBytes: number = frame.readUInt32BE(0);
     const hashBytes: number = frame.length - saltBytes - 8;
@@ -47,23 +45,14 @@ export async function verifyPassword(password: string, hashframe: string): Promi
 }
 
 async function hashPbkd2(password: string, salt: Buffer, conf: IPbkd2Config): Promise<Buffer> {
-
     return new Promise((resolve, reject) => {
-
-        pbkdf2(password, salt, conf.iterations, conf.hashBytes, conf.algo, (err: Error, hash: Buffer) => {
-            if(err) reject(err);
-
-            resolve(hash);
-        })
+        pbkdf2(password, salt, conf.iterations, conf.hashBytes, conf.algo,
+            (err: Error, hash: Buffer) => err ? reject(err) : resolve(hash))
     })
 }
 
 async function getSalt(): Promise<Buffer> {
     return new Promise((resolve, reject) => {
-        randomBytes(config.saltBytes, (err: Error, slt: Buffer) => {
-            if (err) reject(err);
-
-            resolve(slt);
-        })
+        randomBytes(config.saltBytes, (err: Error, slt: Buffer) => err ? reject(err) : resolve(slt))
     })
 }

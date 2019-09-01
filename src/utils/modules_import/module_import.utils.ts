@@ -13,29 +13,20 @@ const regexInitFile: RegExp = new RegExp('init', 'gm');
 const regexRouteFile: RegExp = new RegExp('routes', 'gm');
 
 const promiseReadDir = async (dir: string): Promise<string[]> => {
-  return new Promise<any>((resolve, reject)  =>  {
-    readdir(dir, (err, data) => {
-        if (err) {
-            reject(err);
-            return;
-        }
-        resolve(data);
-    })
+  return new Promise<string[]>((resolve, reject)  =>  {
+    readdir(dir, (err, data) => err ? reject(err) : resolve(data))
   })
 };
 
 const getIsDir = async (filePath: string): Promise<boolean> => {
-    return new Promise<boolean>((resolve, reject) => {
-        lstat(filePath, (err, res) => {
-            if (err) {
-                reject(err);
-                return;
-            }
-            resolve(res.isDirectory());
-        })
-    })
+    return new Promise<boolean>((resolve, reject) =>
+        lstat(filePath, (err, res) => err ? reject(err) : resolve(res.isDirectory()))
+    );
 };
 
+// Import .routes.ts file and .init.ts
+// if .routes.ts use into app
+// if .init.ts only start function
 const importFile = async (fileName: string, path: string, app: Express): Promise<void> => {
     const pathFile: string = `${path}/${fileName}`;
 
@@ -56,15 +47,9 @@ const importFile = async (fileName: string, path: string, app: Express): Promise
     }
 };
 
-const openModuleDir = async (modulesBaseDir: string, moduleDirName: string, app: Express): Promise<void> => {
-    const path: string = `${modulesBaseDir}/${moduleDirName}`;
-    const isDir: boolean = await getIsDir(path);
-
-    if (!isDir) {
-        return;
-    }
-
-    const dir: string[] = (await promiseReadDir(path))
+// Get all files from a sub of /modules
+const getFilesToLoad = async (path: string): Promise<string[]> => {
+    return (await promiseReadDir(path))
         .reduce((acum: string[], p: string) => {
             if (p.match(regexInitFile)) {
                 acum.unshift(p);
@@ -73,18 +58,29 @@ const openModuleDir = async (modulesBaseDir: string, moduleDirName: string, app:
             }
             return acum;
         }, []);
+};
+
+const openModuleDir = async (modulesBaseDir: string, moduleDirName: string, app: Express): Promise<void[]> => {
+    const path: string = `${modulesBaseDir}/${moduleDirName}`;
+
+    if (!await getIsDir(path)) {
+        return;
+    }
+
+    const dir: string[] = await getFilesToLoad(path);
 
     if (!dir.length) {
         return ;
     }
 
-    await Promise.all(
+    return Promise.all(
         dir.map( async (filename) => importFile(filename, path, app))
     );
 };
 
 export const importModules = async (app: Express): Promise<void> => {
     const modulesBaseDir: string = `${getBaseDir()}/modules`;
+    // Get all modules
     const modulesDirNames: string[] = await promiseReadDir(modulesBaseDir);
 
     await Promise.all(
