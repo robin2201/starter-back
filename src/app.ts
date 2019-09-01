@@ -46,9 +46,10 @@ export default async (): Promise<Express> => {
 
     app.get('/ping', async (req: Request, res: Response): Promise<Response> => res.status(200).send('pong'));
 
+    // mongo connection to Atlas
     await mongoInit();
 
-
+    // load all modules
     await importModules(app);
 
     app.get('*', notFoundRouteMiddleware);

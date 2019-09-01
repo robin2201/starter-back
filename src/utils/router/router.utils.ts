@@ -59,7 +59,7 @@ const loadRoute = async (route: IRoutes, moduleName: string, router: Router): Pr
 export default async (routes: IRoutes[], moduleName: string): Promise<Router> => {
     const loggerRoutes = createCustomLogger(`module-${moduleName}-routes`);
 
-    loggerRoutes.info('Start routes import');
+    loggerRoutes.info(`Start routes import for module ${moduleName}`);
 
     const router: Router = Router();
 
