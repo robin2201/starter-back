@@ -17,8 +17,8 @@ starter node + TS
  this will be updated in future to use KMS services
 
 # ROUTER
-  All routes are imported automaticaly,
-  Your routes need to have this structure:
+  - All routes are imported automaticaly,
+  - Your routes need to have this structure:
    ### format:
      [
         {
