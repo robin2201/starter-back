@@ -35,8 +35,8 @@ starter node + TS
   this action will create a directory called moduleName
   this directory will contains files:
   ### format:
-    .controller.ts
-    .service.ts
-    .query.ts
-    .init.ts
-    .validator.ts
+    ${moduleName}.controller.ts
+    ${moduleName}.service.ts
+    ${moduleName}.query.ts
+    ${moduleName}.init.ts
+    ${moduleName}.validator.ts
