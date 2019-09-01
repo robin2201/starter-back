@@ -1,9 +1,9 @@
 # starter-back
 starter node + TS
 
-## Database
+# Database
   Use Atlas, add configuration into .env
-  # format:
+  ### format:
     MONGO_CLUSTER_URI=mongodb+srv://Your_mongo_uri
     DB_NAME=yourDBName
 
@@ -12,10 +12,10 @@ starter node + TS
   Into this directory create a sub called rsa
   Into rsa add a key pairs RSA, used to encrypt JWT
 
-## ROUTER
+# ROUTER
   All routes are imported automaticaly,
   Your routes need to have this structure:
-   # format:
+   ### format:
      [
         {
               path: "/route",
@@ -30,10 +30,11 @@ starter node + TS
         ...
       ]
 
-## generator
+# GENERATOR
   command: npm run generate "moduleName"
   this action will create a directory called moduleName
   this directory will contains files:
+  ### format:
     .controller.ts
     .service.ts
     .query.ts
