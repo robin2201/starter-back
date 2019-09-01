@@ -30,10 +30,14 @@ starter node + TS
         ...
       ]
 
+# MODULES
+  - All modules need to be placed into /modules
+  - If not they don't will be imported into app
+  
 # GENERATOR
-  command: npm run generate "moduleName"
-  this action will create a directory called moduleName
-  this directory will contains files:
+  - command: npm run generate "moduleName"
+  - this action will create a directory called moduleName
+  - this directory will contains files:
   ### format:
     ${moduleName}.controller.ts
     ${moduleName}.service.ts
