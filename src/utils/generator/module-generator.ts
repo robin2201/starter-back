@@ -62,8 +62,8 @@ const generate = async (moduleName: string): Promise<any> => {
 
 (async () => {
     const moduleName: string = process.argv[2];
+    console.log("Start generate module", "\x1b[34m", moduleName, "\x1b[0m");
 
-    console.log(moduleName);
     try {
         await generate(moduleName);
     } catch (e) {

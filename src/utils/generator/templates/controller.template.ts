@@ -30,4 +30,5 @@ export const generateControllerFile = async (path: string, moduleName: string): 
     const filename: string = `${path}/${moduleName}.controller.ts`;
 
     await writeFilePromise(filename, file);
+    console.log("\x1b[32m", "Success generate file", filename, "\x1b[0m");
 };
