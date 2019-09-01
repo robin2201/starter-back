@@ -39,10 +39,8 @@ const loadRoute = async (route: IRoutes, moduleName: string, router: Router): Pr
     const middlewaresHandlers = [];
 
     if (route.validate) {
-        middlewaresHandlers.push(
-            checkSchema(route.validate),
-            validateRequest
-        );
+        middlewaresHandlers.push(checkSchema({ ...route.validate }));
+        middlewaresHandlers.push(validateRequest);
     }
 
     if (route.session) {
