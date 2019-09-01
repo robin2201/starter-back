@@ -39,7 +39,7 @@ starter node + TS
   - If not they don't will be imported into app
   
 # GENERATOR
-  - command: npm run generate "moduleName"
+    npm run generate "moduleName"
   - this action will create a directory called moduleName
   - this directory will contains files:
   ### format:
