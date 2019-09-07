@@ -4,7 +4,7 @@ const getQueryTemplate = (moduleName: string): Buffer => {
     const moduleNameCapitalize: string = `${moduleName.charAt(0).toUpperCase() + moduleName.slice(1)}`;
 
     return Buffer.from(`
-import { getCollection, checkIfCollectionExist, createCollection } from "../mongo";
+import { getCollection, checkIfCollectionExist, createCollection } from "../../init/mongo";
 import { Collection } from "mongodb";
 
 const collectionName = "${moduleName}";

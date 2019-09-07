@@ -1,28 +1,17 @@
-import { lstat, readdir } from "fs";
 import { Express, Router } from "express";
-import {IRoutes} from "../../interfaces/routes.interface";
-import {notStrictEqual} from "assert";
+import { IRoutes } from "../../../interfaces/routes.interface";
+import { notStrictEqual } from "assert";
 
 // ROUTER
-import addRoutes from "../../utils/router/router.utils";
+import addRoutes from "../router/router_import.utils";
 
 // UTILS
-import { getBaseDir } from "../directory/get-base-dir";
+import { getBaseDir } from "../../directory/get-base-dir";
+import { getIsDir } from "../../directory/is_dir";
+import { promiseReadDir } from "../../directory/readdir";
 
 const regexInitFile: RegExp = new RegExp('init', 'gm');
 const regexRouteFile: RegExp = new RegExp('routes', 'gm');
-
-const promiseReadDir = async (dir: string): Promise<string[]> => {
-  return new Promise<string[]>((resolve, reject)  =>  {
-    readdir(dir, (err, data) => err ? reject(err) : resolve(data))
-  })
-};
-
-const getIsDir = async (filePath: string): Promise<boolean> => {
-    return new Promise<boolean>((resolve, reject) =>
-        lstat(filePath, (err, res) => err ? reject(err) : resolve(res.isDirectory()))
-    );
-};
 
 // Import .routes.ts file and .init.ts
 // if .routes.ts use into app
@@ -48,6 +37,7 @@ const importFile = async (fileName: string, path: string, app: Express): Promise
 };
 
 // Get all files from a sub of /modules
+// Return list of files, first init and after routes
 const getFilesToLoad = async (path: string): Promise<string[]> => {
     return (await promiseReadDir(path))
         .reduce((acum: string[], p: string) => {

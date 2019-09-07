@@ -5,6 +5,7 @@ import { IMyError, MyError } from "../../utils/errors/errors.utils";
 export async function validateRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
 
     try {
+
         validationResult(req).throw();
 
         next();

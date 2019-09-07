@@ -1,4 +1,4 @@
-import {ValidationSchema} from "express-validator/check";
+import { ValidationSchema } from "express-validator/check";
 
 export const PostSessionSchemaValidator: ValidationSchema = {
     username: {

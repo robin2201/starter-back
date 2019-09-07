@@ -18,7 +18,6 @@ const execStart: [number, number] = process.hrtime();
             process.exit(-1);
     })
         .finally( () => {
-            // Check used memory and app loading init time
             const {
                 rss,
                 heapTotal,

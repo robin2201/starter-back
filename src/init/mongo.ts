@@ -1,5 +1,5 @@
 import { MongoClient, Collection } from "mongodb";
-import { createCustomLogger } from "./logger";
+import { createCustomLogger } from "../modules/logger";
 import { Logger } from "winston";
 import { MyError } from "../utils/errors/errors.utils";
 
@@ -16,24 +16,6 @@ const mongo: mongoConnection =  {
         uri: process.env.MONGO_CLUSTER_URI,
         dbName: process.env.DB_NAME
 };
-
-export async function mongoInit(): Promise<void> {
-    mongoLogger.info(`Start connection to MongoDB: ${mongo.dbName}`);
-
-    try {
-        client = await MongoClient.connect(mongo.uri, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
-
-        mongoLogger.info(`Success connection to MongoDB`);
-
-        return;
-    } catch (e) {
-        mongoLogger.error(`Fail mongodb connection on URI ${mongo.uri}`);
-        throw e;
-    }
-}
 
 export const getCollection = async (name: string): Promise<Collection> => {
     const col: Collection = client.db(mongo.dbName).collection(name);
@@ -58,3 +40,21 @@ export const checkIfCollectionExist = async (collectionName: string): Promise<bo
         .toArray()
     ).find(({ name }) => name === collectionName)
 };
+
+export default async function mongoInit(): Promise<void> {
+    mongoLogger.info(`Start connection to MongoDB: ${mongo.dbName}`);
+
+    try {
+        client = await MongoClient.connect(mongo.uri, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+
+        mongoLogger.info(`Success connection to MongoDB`);
+
+        return;
+    } catch (e) {
+        mongoLogger.error(`Fail mongodb connection on URI ${mongo.uri}`);
+        throw e;
+    }
+}

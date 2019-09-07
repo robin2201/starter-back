@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { createCustomLogger } from "../../modules/logger";
+import { createCustomLogger } from "../../../modules/logger";
 import { checkSchema } from "express-validator/check";
-import { validateRequest } from "../../middlewares/validators/express-validate.middleware";
-import { sessionMiddleware } from "../../middlewares/session/session.middleware";
-import { IRoutes } from "../../interfaces/routes.interface";
+import { validateRequest } from "../../../middlewares/validators/express-validate.middleware";
+import { sessionMiddleware } from "../../../middlewares/session/session.middleware";
+import { IRoutes } from "../../../interfaces/routes.interface";
 import { notStrictEqual } from "assert";
 
 const iRoutesRequiredFields: string[] = [
@@ -39,8 +39,9 @@ const loadRoute = async (route: IRoutes, moduleName: string, router: Router): Pr
     const middlewaresHandlers = [];
 
     if (route.validate) {
-        middlewaresHandlers.push(checkSchema({ ...route.validate }));
+        middlewaresHandlers.push(checkSchema(route.validate));
         middlewaresHandlers.push(validateRequest);
+
     }
 
     if (route.session) {
@@ -62,7 +63,7 @@ export default async (routes: IRoutes[], moduleName: string): Promise<Router> =>
     const router: Router = Router();
 
     await Promise.all(
-        routes.map(async route => loadRoute(route, moduleName, router))
+        routes.map( async (route) => await loadRoute(route, moduleName, router))
     );
 
     return router;

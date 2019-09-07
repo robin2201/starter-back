@@ -1,5 +1,5 @@
 // CORE
-import express, { Express, NextFunction, Request, Response, Router } from 'express';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
 import compression from 'compression';
 import helmet from 'helmet';
@@ -9,7 +9,8 @@ const rateLimit = require("express-rate-limit");
 require('dotenv').config();
 
 
-import { importModules } from "./utils/modules_import/module_import.utils";
+import { importModules } from "./utils/imports/modules/module_import.utils";
+import { importInitFiles } from "./utils/imports/inits/init_import.utils";
 
 // TOOLS
 import { createCustomLogger } from "./modules/logger";
@@ -17,7 +18,7 @@ import { createCustomLogger } from "./modules/logger";
 // INTERFACES
 import { errorsHandlerMiddleware, IMyError, MyError } from "./utils/errors/errors.utils";
 import { Logger } from "winston";
-import { mongoInit } from "./modules/mongo";
+import mongoInit from "./init/mongo";
 
 export default async (): Promise<Express> => {
     const app: Express = express();
@@ -46,10 +47,9 @@ export default async (): Promise<Express> => {
 
     app.get('/ping', async (req: Request, res: Response): Promise<Response> => res.status(200).send('pong'));
 
-    // mongo connection to Atlas
-    await mongoInit();
+    await importInitFiles();
+    // await mongoInit();
 
-    // load all modules
     await importModules(app);
 
     app.get('*', notFoundRouteMiddleware);
