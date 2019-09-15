@@ -1,4 +1,5 @@
 import { writeFilePromise } from "../utils/writeFile.utils";
+import {ModuleInfos} from "../module-generator";
 
 const getQueryTemplate = (moduleName: string): Buffer => {
     const moduleNameCapitalize: string = `${moduleName.charAt(0).toUpperCase() + moduleName.slice(1)}`;
@@ -28,9 +29,9 @@ const findOne${moduleNameCapitalize} = async (query: any, projection: any = {}):
 `)
 };
 
-export const generateQueryFile = async (path: string, moduleName: string): Promise<void> => {
-    const file: Buffer = await getQueryTemplate(moduleName);
-    const filename: string = `${path}/${moduleName}.query.ts`;
+export const generateQueryFile = async (moduleInfos: ModuleInfos): Promise<void> => {
+    const file: Buffer = await getQueryTemplate(moduleInfos.name);
+    const filename: string = `${moduleInfos.absolutePath}/${moduleInfos.name}.query.ts`;
 
     await writeFilePromise(filename, file);
     console.log("\x1b[32m", "File", filename, "\x1b[0m");

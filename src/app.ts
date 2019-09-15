@@ -18,7 +18,6 @@ import { createCustomLogger } from "./modules/logger";
 // INTERFACES
 import { errorsHandlerMiddleware, IMyError, MyError } from "./utils/errors/errors.utils";
 import { Logger } from "winston";
-import mongoInit from "./init/mongo";
 
 export default async (): Promise<Express> => {
     const app: Express = express();
@@ -48,7 +47,6 @@ export default async (): Promise<Express> => {
     app.get('/ping', async (req: Request, res: Response): Promise<Response> => res.status(200).send('pong'));
 
     await importInitFiles();
-    // await mongoInit();
 
     await importModules(app);
 

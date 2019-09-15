@@ -1,6 +1,7 @@
 import {writeFilePromise} from "../utils/writeFile.utils";
+import {ModuleInfos} from "../module-generator";
 
-const getServiceTemplate = (moduleName: string): Buffer => {
+const getServiceTemplate = (moduleName: string, levelImport: string): Buffer => {
     const moduleNameCapitalize: string = `${moduleName.charAt(0).toUpperCase() + moduleName.slice(1)}`;
     const serviceFunctionName: string = `get${moduleNameCapitalize}Service`
 
@@ -9,7 +10,7 @@ const getServiceTemplate = (moduleName: string): Buffer => {
 import { get${moduleNameCapitalize} } from "./${moduleName}.query";
 
 // UTILS
-import { MyError } from "../../utils/errors/errors.utils";
+import { MyError } from "${levelImport}utils/errors/errors.utils";
 
 export const ${serviceFunctionName} = async (query: { [key: string]: any }): Promise<any> => {
     const ${moduleName} = await get${moduleNameCapitalize}(query);
@@ -23,9 +24,9 @@ export const ${serviceFunctionName} = async (query: { [key: string]: any }): Pro
 `)
 };
 
-export const generateServiceFile = async (path: string, moduleName: string): Promise<void> => {
-    const file: Buffer = await getServiceTemplate(moduleName);
-    const filename: string = `${path}/${moduleName}.service.ts`;
+export const generateServiceFile = async (moduleInfos: ModuleInfos): Promise<void> => {
+    const file: Buffer = await getServiceTemplate(moduleInfos.name, moduleInfos.levelImport);
+    const filename: string = `${moduleInfos.absolutePath}/${moduleInfos.name}.service.ts`;
 
     await writeFilePromise(filename, file);
     console.log("\x1b[32m", "File", filename, "\x1b[0m");

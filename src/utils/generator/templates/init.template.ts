@@ -1,10 +1,11 @@
 import { writeFilePromise } from "../utils/writeFile.utils";
+import {ModuleInfos} from "../module-generator";
 
-const getQueryTemplate = (moduleName: string): Buffer => {
+const getQueryTemplate = (moduleName: string, levelImport: string): Buffer => {
     const moduleNameCapitalize: string = `${moduleName.charAt(0).toUpperCase() + moduleName.slice(1)}`;
 
     return Buffer.from(`
-import { getCollection, checkIfCollectionExist, createCollection } from "../../init/mongo";
+import { getCollection, checkIfCollectionExist, createCollection } from "${levelImport}init/mongo";
 import { Collection } from "mongodb";
 
 const collectionName = "${moduleName}";
@@ -59,9 +60,9 @@ export default async (): Promise<void> => {
 `)
 };
 
-export const generateInitFile = async (path: string, moduleName: string): Promise<void> => {
-    const file: Buffer = await getQueryTemplate(moduleName);
-    const filename: string = `${path}/${moduleName}.init.ts`;
+export const generateInitFile = async (moduleInfos: ModuleInfos): Promise<void> => {
+    const file: Buffer = await getQueryTemplate(moduleInfos.name, moduleInfos.levelImport);
+    const filename: string = `${moduleInfos.absolutePath}/${moduleInfos.name}.init.ts`;
 
     await writeFilePromise(filename, file);
     console.log("\x1b[32m", "File", filename, "\x1b[0m");

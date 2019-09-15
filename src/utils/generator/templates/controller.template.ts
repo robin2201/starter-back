@@ -1,4 +1,5 @@
 import { writeFilePromise } from "../utils/writeFile.utils";
+import {ModuleInfos} from "../module-generator";
 
 const getControllerTemplate = (moduleName: string): Buffer => {
     const moduleNameCapitalize: string = `${moduleName.charAt(0).toUpperCase() + moduleName.slice(1)}`;
@@ -25,9 +26,9 @@ export const get${moduleNameCapitalize}Controller = async (req: Request, res: Re
 `)
 };
 
-export const generateControllerFile = async (path: string, moduleName: string): Promise<void> => {
-    const file: Buffer = await getControllerTemplate(moduleName);
-    const filename: string = `${path}/${moduleName}.controller.ts`;
+export const generateControllerFile = async (moduleInfos: ModuleInfos): Promise<void> => {
+    const file: Buffer = await getControllerTemplate(moduleInfos.name);
+    const filename: string = `${moduleInfos.absolutePath}/${moduleInfos.name}.controller.ts`;
 
     await writeFilePromise(filename, file);
     console.log("\x1b[32m", "File", filename, "\x1b[0m");
